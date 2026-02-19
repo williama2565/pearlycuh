@@ -32,6 +32,10 @@ header{
   border-bottom:2px solid var(--gold);
 }
 header h1{font-size:4rem;}
+
+nav{
+  margin-top:1rem;
+}
 nav a{
   margin:0 15px;
   color:white;
@@ -101,6 +105,7 @@ section{
 .product:hover{
   box-shadow:0 0 20px var(--gold);
 }
+
 button{
   padding:10px 20px;
   border:2px solid var(--gold);
@@ -108,6 +113,7 @@ button{
   color:var(--gold);
   cursor:pointer;
   margin-top:10px;
+  transition:.3s;
 }
 button:hover{
   background:var(--gold);
@@ -115,16 +121,20 @@ button:hover{
 }
 
 /* CART */
-#cart{
+#cartDrawer{
   position:fixed;
-  right:0;
+  right:-350px;
   top:0;
   width:300px;
   height:100%;
   background:black;
   border-left:2px solid var(--gold);
   padding:1rem;
+  transition:.4s;
   overflow:auto;
+}
+#cartDrawer.open{
+  right:0;
 }
 .cart-item{
   margin-bottom:15px;
@@ -133,7 +143,6 @@ button:hover{
 }
 
 /* FORM */
-  action="https://formsubmit.co/perlaruelas.2003@gmail.com"
 form{
   max-width:600px;
   margin:auto;
@@ -148,6 +157,20 @@ input, textarea, select{
   color:white;
 }
 
+/* SOCIALS */
+.socials a{
+  display:inline-block;
+  margin:10px 15px;
+  font-size:1.4rem;
+  color:white;
+  text-decoration:none;
+  transition:.3s;
+}
+.socials a:hover{
+  color:var(--gold);
+  text-shadow:0 0 10px var(--gold);
+}
+
 footer{
   background:black;
   padding:2rem;
@@ -160,14 +183,28 @@ footer{
 <header>
   <h1>PEARLS INK</h1>
   <nav>
+    <a href="#about">About</a>
     <a href="#gallery">Gallery</a>
     <a href="#shop">Shop</a>
     <a href="#custom">Custom Tattoo</a>
+    <a href="#booking">Booking</a>
+    <a href="#socials">Socials</a>
+    <a href="javascript:void(0)" onclick="toggleCart()">Cart</a>
   </nav>
 </header>
 
 <section class="hero">
   <h2>Ink With <span>Meaning</span></h2>
+</section>
+
+<section id="about">
+  <h2>About Me</h2>
+  <div class="divider"></div>
+  <p style="max-width:800px;margin:auto;font-size:1.2rem;line-height:1.8;">
+    Pearls Ink is rooted in Chicano traditional, old school, love and prison-inspired art. 
+    My work reflects Mexican-American culture, loyalty, faith, romance, and storytelling through ink.
+    Every piece represents heritage, struggle, passion, and respect for the art form.
+  </p>
 </section>
 
 <section id="gallery">
@@ -181,16 +218,14 @@ footer{
 </section>
 
 <section id="shop">
-  <h2>Art Prints Shop</h2>
+  <h2>Art Prints</h2>
   <div class="divider"></div>
-
   <div class="products">
     <div class="product">
       <h3>Love Letter Print</h3>
       <p>$40</p>
       <button onclick="addToCart('Love Letter Print',40)">Add to Cart</button>
     </div>
-
     <div class="product">
       <h3>Chicano Flash Sheet</h3>
       <p>$60</p>
@@ -202,8 +237,7 @@ footer{
 <section id="custom">
   <h2>Custom Tattoo Request</h2>
   <div class="divider"></div>
-
-  <form action="https://formsubmit.co/youremail@gmail.com" method="POST">
+  <form action="https://formsubmit.co/youremail@gmail.com" method="POST" enctype="multipart/form-data">
     <input type="text" name="Name" placeholder="Your Name" required>
     <input type="email" name="Email" placeholder="Your Email" required>
     <select name="Size">
@@ -212,14 +246,34 @@ footer{
       <option>Large (9in+)</option>
     </select>
     <textarea name="Description" placeholder="Describe your tattoo idea..." required></textarea>
+    <input type="file" name="Reference Image" accept="image/*">
     <button type="submit">Submit Request</button>
   </form>
 </section>
 
-<div id="cart">
+<section id="booking">
+  <h2>Book Appointment</h2>
+  <div class="divider"></div>
+  <iframe src="https://calendar.google.com/calendar/embed?src=yourcalendarID"
+          width="100%" height="600" frameborder="0"></iframe>
+</section>
+
+<section id="socials">
+  <h2>Follow Pearls Ink</h2>
+  <div class="divider"></div>
+  <div class="socials">
+    <a href="#">Instagram</a>
+    <a href="#">TikTok</a>
+    <a href="#">Facebook</a>
+    <a href="#">Email</a>
+  </div>
+</section>
+
+<div id="cartDrawer">
   <h2>Your Cart</h2>
   <div id="cartItems"></div>
   <h3>Total: $<span id="total">0</span></h3>
+  <button onclick="toggleCart()">Close</button>
 </div>
 
 <footer>
@@ -228,6 +282,9 @@ footer{
 
 <script>
 let cart=[];
+function toggleCart(){
+  document.getElementById("cartDrawer").classList.toggle("open");
+}
 function addToCart(name,price){
   cart.push({name,price});
   renderCart();
